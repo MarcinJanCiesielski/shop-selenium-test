@@ -1,6 +1,7 @@
 package pl.mjc.shop.selenium.tests;
 
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import pl.mjc.shop.selenium.pages.HomePage;
 import pl.mjc.shop.selenium.pages.SearchProductPage;
@@ -18,13 +19,17 @@ public class SearchProductTest extends BaseTest {
         searchProductPage.performSearch("git");
         
         SearchProductResultsPage resultsPage = new SearchProductResultsPage(driver);
+        try {
+            Thread.sleep(3000);
+        }
+        catch(InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         List<String> products = resultsPage.getProducts()
                                            .stream()
                                             .filter(WebElement::isDisplayed)
                                            .map(WebElement::getText)
                                            .toList();
-        for(String product : products) {
-            System.out.println("PROD: " + product);
-        }
+        Assert.assertTrue(products.contains("GIT basics"));
     }
 }
